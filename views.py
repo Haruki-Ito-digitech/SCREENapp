@@ -17,9 +17,9 @@ def serve_static(filename):
 # def handle_message(message):
 #     emit('message', f'{request.sid} => {message}', namespace='/demo', broadcast=True)
 
-@socketio.on('video_frame')
-def handle_video_frame(data):
-    frame_data = data['data']
-    print("Received frame data of length:", len(frame_data))
-    emit('video_frame', {'data': frame_data}, broadcast=True)
+@socketio.on('screenshot')
+def handle_screenshot(data):
+    screenshot_data = data['data']
+    print("Received screenshot data of length:", len(screenshot_data))
+    emit('screenshot', {'data': screenshot_data}, broadcast=True)
 

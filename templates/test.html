@@ -6,52 +6,57 @@
 </head>
 <body>
     <h1>Screen Capture Streaming</h1>
-    <video id="video" autoplay style="display:none;"></video>
-    <img id="receivedVideo" src="" alt="Received Video Stream">
+    <canvas id="canvas" style="display:none;"></canvas>
+    <img id="screenshot" src="" alt="Screen Shot">
     <script>
         var socket = io.connect();
+        var canvas = document.getElementById('canvas');
+        var ctx = canvas.getContext('2d');
+        var videoElement = document.createElement('video');
+        var captureStream = null;
 
         async function startCapture() {
             try {
                 const displayMediaOptions = {
-                    video: {
-                        cursor: "always"
-                    },
+                    video: { cursor: "always" },
                     audio: false
                 };
-                const captureStream = await navigator.mediaDevices.getDisplayMedia(displayMediaOptions);
-                const videoElement = document.getElementById('video');
+                captureStream = await navigator.mediaDevices.getDisplayMedia(displayMediaOptions);
                 videoElement.srcObject = captureStream;
-
-                const canvas = document.createElement('canvas');
-                const context = canvas.getContext('2d');
-
-                function captureFrame() {
-                    canvas.width = videoElement.videoWidth;
-                    canvas.height = videoElement.videoHeight;
-                    context.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
-                    const dataUrl = canvas.toDataURL('image/jpeg');
-                    const base64Data = dataUrl.split(',')[1];
-                    console.log("Sending frame data of length:", base64Data.length);
-                    socket.emit('video_frame', {data: base64Data});
-                    requestAnimationFrame(captureFrame);
-                }
-
-                captureFrame();
+                await videoElement.play();
+                console.log("Capture started");
             } catch (err) {
                 console.error("Error: " + err);
             }
         }
 
+        function captureScreen() {
+            if (videoElement.srcObject) {
+                canvas.width = videoElement.videoWidth;
+                canvas.height = videoElement.videoHeight;
+                ctx.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
+
+                const base64Data = canvas.toDataURL('image/jpeg');
+                socket.emit('screenshot', { data: base64Data });
+            }
+        }
+
         socket.on('connect', function() {
             console.log("Connected to server");
+
+            // キャプチャを開始
             startCapture();
+
+            // 0.1秒ごとにスクリーンキャプチャを行う
+            setInterval(captureScreen, 100);
         });
 
-        socket.on('video_frame', function(data) {
-            console.log("Received frame data");
-            document.getElementById('receivedVideo').src = 'data:image/jpeg;base64,' + data.data;
+        socket.on('screenshot', function(data) {
+            var img = document.getElementById('screenshot');
+            img.src = data.data;
         });
     </script>
 </body>
 </html>
+
+
