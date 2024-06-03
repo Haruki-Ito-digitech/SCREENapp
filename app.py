@@ -12,6 +12,14 @@ CORS(app, supports_credentials=True, responses={r"/*": {"origins": "*"}})
 def index():
     return render_template('index.html')
 
+@app.route('/host')
+def host():
+    
+    return render_template('host.html')
+@app.route('/aud')
+def aud():
+    return render_template('audience.html')
+
 @socketio.on('screenshot')
 def handle_screenshot(data):
     screenshot_data = data['data']
@@ -19,4 +27,5 @@ def handle_screenshot(data):
     emit('screenshot', {'data': screenshot_data}, broadcast=True)
 
 if __name__ == '__main__':
-    socketio.run(app, debug=False, host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
+    socketio.run(app, debug=False,port=5000)
+    #  host='0.0.0.0', 

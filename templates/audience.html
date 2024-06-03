@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <title>Screen Capture Streaming</title>
+    <style>
+        body{background-color: black;}
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+</head>
+<body class="aud">
+    <canvas id="canvas" style="display:none;"></canvas>
+    <img id="screenshot" src="" alt="Screen Shot">
+    <script>
+        var socket = io.connect();
+        socket.on('screenshot', function(data) {
+            var img = document.getElementById('screenshot');
+            img.src = data.data;
+        });
+    </script>
+</body>
+</html>

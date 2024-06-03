@@ -1,6 +1,58 @@
+
+body {
+    background-color: deepskyblue;
+    text-align: center;
+    font-family: 'Oswald', sans-serif;
+    
+}
+
 h1 {
-    color: #e81010;
+    position: relative;
+    top: 100px;
+    font-size: 400%;
+}
+.cards {
+    position: relative;
+    top: 150px;
+}
+.frontbuttons {
+    background-color: aliceblue;
+    height: 300px;
+    width: 100%;
+    margin: 0 auto;
+    max-width: 800px;
+    border-radius: 15px;
+    padding-top: 50px;
+    padding-bottom: 50px;
+    box-shadow: 2px 3px 3px gray;
+    text-align: center;
+}
+a {
+  color: black;
+  text-decoration: none;
+  border: 3px, black;
+}
+.btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    width: 300px;
+    height: 60px;
+    color: black;
+    font-size: 18px;
+    font-weight: 700;
+    text-decoration: none;
+    background-color: #e0e0e0;
+    border-radius: 20px;
+    margin-inline: auto;
+    margin-top: 0px;
+}
+
+
+h1 {
+    color: white;
 }
 video {
     width: 100%;
-  }
+}

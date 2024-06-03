@@ -1,13 +1,15 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
     <title>Screen Capture Streaming</title>
+    <style>
+        body{background-color: black;}
+    </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
 </head>
 <body>
-    <h1>Screen Capture Streaming</h1>
     <canvas id="canvas" style="display:none;"></canvas>
-    <img id="screenshot" src="" alt="Screen Shot">
+    <img id="screenshot" src="" alt="共有する画面を選択してください">
     <script>
         var socket = io.connect();
         var canvas = document.getElementById('canvas');
@@ -35,6 +37,7 @@
                 canvas.width = videoElement.videoWidth;
                 canvas.height = videoElement.videoHeight;
                 ctx.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
+
                 const base64Data = canvas.toDataURL('image/jpeg');
                 socket.emit('screenshot', { data: base64Data });
             }
@@ -57,5 +60,3 @@
     </script>
 </body>
 </html>
-
-

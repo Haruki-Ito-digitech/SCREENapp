@@ -1,60 +1,24 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
-    <title>Screen Capture Streaming</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- <meta http-equiv="X-UA-Compatible" content="ie=edge"> -->
+    <title>myshare</title>
+    	
+    <link href="https://fonts.googleapis.com/css?family=Oswald:700" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='layout.css')}}">
 </head>
 <body>
-    <h1>Screen Capture Streaming</h1>
-    <canvas id="canvas" style="display:none;"></canvas>
-    <img id="screenshot" src="" alt="Screen Shot">
-    <script>
-        var socket = io.connect();
-        var canvas = document.getElementById('canvas');
-        var ctx = canvas.getContext('2d');
-        var videoElement = document.createElement('video');
-        var captureStream = null;
+    <h1>myshare</h1>
+    <div class="cards">
+        <div class="btn">
+            <a href="{{ url_for('host') }}">画面を共有する</a>
+        </div>
+        <div class="btn">
+            <a href="{{ url_for('aud') }}">閲覧する</a>
+        </div>
+    </div>
 
-        async function startCapture() {
-            try {
-                const displayMediaOptions = {
-                    video: { cursor: "always" },
-                    audio: false
-                };
-                captureStream = await navigator.mediaDevices.getDisplayMedia(displayMediaOptions);
-                videoElement.srcObject = captureStream;
-                await videoElement.play();
-                console.log("Capture started");
-            } catch (err) {
-                console.error("Error: " + err);
-            }
-        }
-
-        function captureScreen() {
-            if (videoElement.srcObject) {
-                canvas.width = videoElement.videoWidth;
-                canvas.height = videoElement.videoHeight;
-                ctx.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
-
-                const base64Data = canvas.toDataURL('image/jpeg');
-                socket.emit('screenshot', { data: base64Data });
-            }
-        }
-
-        socket.on('connect', function() {
-            console.log("Connected to server");
-
-            // キャプチャを開始
-            startCapture();
-
-            // 0.1秒ごとにスクリーンキャプチャを行う
-            setInterval(captureScreen, 100);
-        });
-
-        socket.on('screenshot', function(data) {
-            var img = document.getElementById('screenshot');
-            img.src = data.data;
-        });
-    </script>
 </body>
 </html>
